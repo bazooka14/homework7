@@ -26,7 +26,7 @@ class Client:
         sex_description = 'женского' if self.sex.lower() == 'female' else 'мужского'
         devices = {
             'mobile': 'мобильного',
-            'tablet': 'планшетного(мобильного)',
+            'tablet': 'планшетного',
             'desktop': 'настольного'
         }
         device_type = devices.get(self.device.lower(), self.device)
@@ -34,14 +34,6 @@ class Client:
                 f"совершила покупку на {self.bill} у.е. с {device_type} "
                 f"браузера {self.browser}. Регион, из которого совершалась покупка: "
                 f"{self.region}.")
-
-def load_csv(filepath):
-    with open(filepath, mode='r', encoding='utf-8') as file:
-        reader = csv.DictReader(file)
-        data = []
-        for row in reader:
-            data.append(row)
-    return data
 
 def parse_client(data_row):
     client = Client(
@@ -55,17 +47,14 @@ def parse_client(data_row):
     )
     return client
 
-def write_output(descriptions, output_filepath):
-    with open(output_filepath, mode='w', encoding='utf-8') as file:
-        for description in descriptions:
-            file.write(description + '\n')
+def process_csv(input_path, output_path):
+    with open(input_path, mode='r', encoding='utf-8') as infile, open(output_path, mode='w', encoding='utf-8') as outfile:
+        reader = csv.DictReader(infile)
+        for row in reader:
+            client = parse_client(row)
+            description = client.generate_description()
+            outfile.write(description + '\n')
 
 input_csv = 'web_clients_correct.csv'
 output_txt = 'descriptions.txt'
-data = load_csv(input_csv)
-descriptions = []
-for row in data:
-    client = parse_client(row)
-    description = client.generate_description()
-    descriptions.append(description)
-write_output(descriptions, output_txt)
+process_csv(input_csv, output_txt)
