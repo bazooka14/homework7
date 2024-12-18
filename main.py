@@ -31,7 +31,7 @@ class Client:
         }
         device_type = devices.get(self.device.lower(), self.device)
         return (f"Пользователь {self.name} {sex_description} пола, {self.age} лет "
-                f"совершила покупку на {self.bill} у.е. с {device_type} "
+                f"совершил покупку на {self.bill} у.е. с {device_type} "
                 f"браузера {self.browser}. Регион, из которого совершалась покупка: "
                 f"{self.region}.")
 
